@@ -11,14 +11,19 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "onCommand:extension.sayHello",
+        "onLanguage:elm"
     ],
     "main": "./out/extension",
     "contributes": {
         "commands": [
             {
+                "command": "extension.expandAbbreviation",
+                "title": "Expand abbreviation to Elm"
+            },
+            {
                 "command": "extension.sayHello",
-                "title": "Hello World"
+                "title": "Enable elmmet"
             }
         ]
     },
@@ -34,5 +39,9 @@
         "vscode": "^1.1.6",
         "@types/node": "^7.0.43",
         "@types/mocha": "^2.2.42"
+    },
+    "dependencies": {
+        "@emmetio/abbreviation": "^0.6.3",
+        "@emmetio/extract-abbreviation": "^0.1.3"
     }
 }
