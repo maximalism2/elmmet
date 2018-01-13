@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Elm formatter a[contenteditable=foo] 1`] = `
-"a [ contenteditable \\"foo\\" ] []
+"a [ contenteditable True ] []
 "
 `;
 
@@ -19,22 +19,18 @@ exports[`Elm formatter div#a>p.b*2>span 1`] = `
 `;
 
 exports[`Elm formatter div>{foo} 1`] = `
-"div [] [ null [] [ text \\"foo\\" ] ]
+"div [] [ text \\"foo\\" ]
 "
 `;
 
 exports[`Elm formatter div>{foo}+{bar} 1`] = `
-"div []
-    [ null [] [ text \\"foo\\" ]
-    , null [] [ text \\"bar\\" ]
-    ]
+"div [] [ text \\"foobar\\" ] ]
 "
 `;
 
 exports[`Elm formatter div>{foo}+{bar}+p 1`] = `
 "div []
-    [ null [] [ text \\"foo\\" ]
-    , null [] [ text \\"bar\\" ]
+    [ text \\"foobar\\"
     , p [] []
     ]
 "
@@ -42,11 +38,9 @@ exports[`Elm formatter div>{foo}+{bar}+p 1`] = `
 
 exports[`Elm formatter div>{foo}+{bar}+p+{foo}+{bar}+p 1`] = `
 "div []
-    [ null [] [ text \\"foo\\" ]
-    , null [] [ text \\"bar\\" ]
+    [ text \\"foobar\\"
     , p [] []
-    , null [] [ text \\"foo\\" ]
-    , null [] [ text \\"bar\\" ]
+    , text \\"foobar\\"
     , p [] []
     ]
 "
@@ -54,15 +48,18 @@ exports[`Elm formatter div>{foo}+{bar}+p+{foo}+{bar}+p 1`] = `
 
 exports[`Elm formatter div>{foo}+p+{bar} 1`] = `
 "div []
-    [ null [] [ text \\"foo\\" ]
+    [ text \\"foo\\"
     , p [] []
-    , null [] [ text \\"bar\\" ]
+    , text \\"bar\\"
     ]
 "
 `;
 
 exports[`Elm formatter div>{foo}>p 1`] = `
-"div [] [ p [] [] ]
+"div []
+    [ text \\"foo\\"
+    , p [] []
+    ]
 "
 `;
 
@@ -73,7 +70,7 @@ exports[`Elm formatter div>div>div 1`] = `
 
 exports[`Elm formatter div>img[src]/+p 1`] = `
 "div []
-    [ img [ src True ] []
+    [ img [ src "" ] []
     , p [] []
     ]
 "
@@ -96,7 +93,7 @@ exports[`Elm formatter div>p*3 1`] = `
 exports[`Elm formatter div>p+img[src]/ 1`] = `
 "div []
     [ p [] []
-    , img [ src True ] []
+    , img [ src "" ] []
     ]
 "
 `;
@@ -104,8 +101,8 @@ exports[`Elm formatter div>p+img[src]/ 1`] = `
 exports[`Elm formatter div>p+img[src]/*2+p 1`] = `
 "div []
     [ p [] []
-    , img [ src True ] []
-    , img [ src True ] []
+    , img [ src "" ] []
+    , img [ src "" ] []
     , p [] []
     ]
 "
@@ -114,9 +111,9 @@ exports[`Elm formatter div>p+img[src]/*2+p 1`] = `
 exports[`Elm formatter div>p+img[src]/*3+p 1`] = `
 "div []
     [ p [] []
-    , img [ src True ] []
-    , img [ src True ] []
-    , img [ src True ] []
+    , img [ src "" ] []
+    , img [ src "" ] []
+    , img [ src "" ] []
     , p [] []
     ]
 "
@@ -125,7 +122,7 @@ exports[`Elm formatter div>p+img[src]/*3+p 1`] = `
 exports[`Elm formatter div>p+img[src]/+p 1`] = `
 "div []
     [ p [] []
-    , img [ src True ] []
+    , img [ src "" ] []
     , p [] []
     ]
 "
@@ -142,12 +139,12 @@ exports[`Elm formatter div{foo} 1`] = `
 `;
 
 exports[`Elm formatter i{a}+i{b} 1`] = `
-"i [] [ text \\"a\\" ] i [] [ text \\"b\\" ]
+"i [] [ text \\"a\\" ], i [] [ text \\"b\\" ]
 "
 `;
 
 exports[`Elm formatter img[src]/+p 1`] = `
-"img [ src True ] [] p [] []
+"img [ src "" ] [], p [] []
 "
 `;
 
