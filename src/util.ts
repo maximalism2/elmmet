@@ -243,7 +243,7 @@ function unindentResultString(result: string): string {
     .join('\n');
 }
 
-export function getPureResultFromFormaterOutput(output: string, prefixToSplitBy: string): stirng {
+export function getPureResultFromFormaterOutput(output: string, prefixToSplitBy: string): string {
   let res = output.split(prefixToSplitBy)[1];
   res = res.replace(/^\s*\n/gm, '');
   res = unindentResultString(res);
