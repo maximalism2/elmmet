@@ -5,9 +5,9 @@ import {
   extractAbbreviation,
   parseAbbreviation,
   execCmd,
-  buildComposition,
   getPureResultFromFormaterOutput
 } from './util';
+import { buildComposition } from './treeParser';
 
 interface AbbreviationSource {
   abbr: string,
