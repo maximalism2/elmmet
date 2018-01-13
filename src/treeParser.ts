@@ -43,11 +43,19 @@ function indent(level: number): string {
   return indentationString;
 }
 
+function addTextContent(node: any, parsedChildrenString: string): string {
+  if (node.value !== null) {
+    const textContent = `text "${node.value}"`;
+    return parsedChildrenString.length > 0 ? textContent + '\n,' + parsedChildrenString : textContent;
+  }
+
+  return parsedChildrenString;
+}
+
 export function buildComposition(
   node: any,
   indentLevel: number = 0
 ): string {
-
   if (node.name === null && node.children.length > 0) {
     return node.children.map(childNode => buildComposition(childNode, indentLevel)).join('');
   }
@@ -58,9 +66,11 @@ export function buildComposition(
     .map(childNode => buildComposition(childNode, indentLevel + 1))
     .join('\n, ');
 
+  const content = addTextContent(node, children);
+
   const nodeString =
       indent(indentLevel) +
-      `${node.name} [${attrs}] [${children}]`;
+      `${node.name} [${attrs}] [${content}]`;
 
   return nodeString
 }
