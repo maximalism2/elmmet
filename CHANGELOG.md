@@ -1,7 +1,7 @@
 # Change Log
-All notable changes to the "elmmet" extension will be documented in this file.
-
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+ - Initial release
 
 ## [Unreleased]
-- Initial release
+- Matching attributes with their values
+- Variables resolving
+- Multiple nested content resolving

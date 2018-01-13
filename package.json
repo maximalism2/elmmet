@@ -1,15 +1,20 @@
 {
     "name": "elmmet",
     "displayName": "Elm Emmet",
-    "description": "Convert emmet html templates to compositions of elm functions",
-    "version": "0.0.1",
+    "description": "Convert emmet abbreviations to composition of elm functions",
+    "version": "1.0.0",
     "publisher": "necinc",
     "license": "MIT",
     "engines": {
         "vscode": "^1.19.0"
     },
     "categories": [
-        "Other"
+        "Formatters"
+    ],
+    "tags": [
+        "emmet",
+        "elm",
+        "html-to-elm"
     ],
     "repository": {
         "type": "git",
