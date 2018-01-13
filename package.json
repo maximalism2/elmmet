@@ -4,6 +4,7 @@
     "description": "Convert emmet html templates to compositions of elm functions",
     "version": "0.0.1",
     "publisher": "necinc",
+    "license": "MIT",
     "engines": {
         "vscode": "^1.19.0"
     },
@@ -23,7 +24,7 @@
         "commands": [
             {
                 "command": "extension.expandAbbreviation",
-                "title": "Expand abbreviation to Elm"
+                "title": "Emmet to Elm"
             },
             {
                 "command": "extension.sayHello",
@@ -35,19 +36,35 @@
         "vscode:prepublish": "tsc -p ./",
         "compile": "tsc -watch -p ./",
         "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "node ./node_modules/vscode/bin/test"
+        "test": "jest"
     },
     "devDependencies": {
         "@types/mocha": "^2.2.32",
         "@types/node": "^6.0.40",
-        "assert": "^1.4.1",
-        "mocha": "^2.3.3",
+        "jest": "^22.0.6",
+        "ts-jest": "^22.0.1",
         "typescript": "^2.0.3",
         "vscode": "^1.0.0"
     },
     "dependencies": {
         "@emmetio/abbreviation": "^0.6.3",
         "@emmetio/extract-abbreviation": "^0.1.3",
-        "elm-format": "^0.6.1-alpha"
+        "elm-format": "^0.7.0-exp"
+    },
+    "jest": {
+        "moduleDirectories": [
+            "node_modules"
+        ],
+        "moduleNameMapper": {
+            "vscode": "<rootDir>/vscode.mock.js"
+        },
+        "moduleFileExtensions": [
+            "ts",
+            "js"
+        ],
+        "transform": {
+            "\\.(ts)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+        },
+        "testRegex": "./.*\\.test.(ts)$"
     }
 }
