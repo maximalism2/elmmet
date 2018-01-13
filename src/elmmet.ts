@@ -1,6 +1,7 @@
+'use strict';
+
 import * as vscode from 'vscode';
-import abbreviationParser from '@emmetio/abbreviation';
-import extract from '@emmetio/extract-abbreviation';
+import { extractAbbreviation, parseAbbreviation } from './util';
 
 interface AbbreviationSource {
   abbr: string,
@@ -17,7 +18,7 @@ class Elmmet {
     let rangeToReplace: vscode.Range = editor.selection;
     let abbr = editor.document.getText(rangeToReplace);
     if (rangeToReplace.isEmpty) {
-        [rangeToReplace, abbr] = this.extractAbbreviation(rangeToReplace.start);
+        [rangeToReplace, abbr] = extractAbbreviation(rangeToReplace.start);
     }
 
     return {
@@ -26,24 +27,12 @@ class Elmmet {
     }
   }
 
-  extractAbbreviation(position: vscode.Position): [vscode.Range, string] {
-    let editor = vscode.window.activeTextEditor;
-    let currentLine = editor.document.lineAt(position.line).text;
-    let result = extract(currentLine, position.character, true);
-    if (!result) {
-        return [null, ''];
-    }
-
-    let rangeToReplace = new vscode.Range(position.line, result.location, position.line, result.location + result.abbreviation.length);
-    return [rangeToReplace, result.abbreviation];
-  }
-
-  generateMarkup() {
+  generateMarkup(): void {
     const abbreviations = this.getAbbreviationSource();
     let tree = null;
 
     try {
-      tree = abbreviationParser(tree);
+      tree = parseAbbreviation(abbreviations.abbr);
     } catch(e) {
       console.log(e.message);
       return;
