@@ -1,37 +1,44 @@
-'use strict';
+"use strict";
 
-import * as vscode from 'vscode';
-import * as cp from 'child_process';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as extract from '@emmetio/extract-abbreviation';
-import * as abbreviationParser from '@emmetio/abbreviation';
+import * as vscode from "vscode";
+import * as cp from "child_process";
+import * as fs from "fs";
+import * as path from "path";
+import * as extract from "@emmetio/extract-abbreviation";
+import * as abbreviationParser from "@emmetio/abbreviation";
 
-export function extractAbbreviation(position: vscode.Position): [vscode.Range, string] {
-    let editor = vscode.window.activeTextEditor;
-    let currentLine = editor.document.lineAt(position.line).text;
-    let result = extract(currentLine, position.character, true);
-    if (!result) {
-        return [null, ''];
-    }
+export function extractAbbreviation(
+  position: vscode.Position
+): [vscode.Range, string] {
+  let editor = vscode.window.activeTextEditor;
+  let currentLine = editor.document.lineAt(position.line).text;
+  let result = extract(currentLine, position.character, true);
+  if (!result) {
+    return [null, ""];
+  }
 
-    let rangeToReplace = new vscode.Range(position.line, result.location, position.line, result.location + result.abbreviation.length);
-    return [rangeToReplace, result.abbreviation];
+  let rangeToReplace = new vscode.Range(
+    position.line,
+    result.location,
+    position.line,
+    result.location + result.abbreviation.length
+  );
+  return [rangeToReplace, result.abbreviation];
 }
 
 export function parseAbbreviation(abbr: string): any {
-    let result = null;
+  let result = null;
 
-    try {
-        result = abbreviationParser(abbr);
-    } catch(e) {
-        console.log('tree parsing error: ', e.message);
-    }
+  try {
+    result = abbreviationParser(abbr);
+  } catch (e) {
+    console.log("tree parsing error: ", e.message);
+  }
 
-    return result;
+  return result;
 }
 
-export const isWindows = process.platform === 'win32';
+export const isWindows = process.platform === "win32";
 
 /** Options for execCmd */
 export interface ExecCmdOptions {
@@ -68,20 +75,32 @@ export interface ExecutingCmd
 }
 
 /** Executes a command. Shows an error message if the command isn't found */
-export function execCmd
-  (cmd: string, options: ExecCmdOptions = {}): ExecutingCmd {
-
-  const { fileName, onStart, onStdout, onStderr, onExit, cmdArguments } = options;
-  let childProcess, firstResponse = true, wasKilledbyUs = false;
+export function execCmd(
+  cmd: string,
+  options: ExecCmdOptions = {}
+): ExecutingCmd {
+  const {
+    fileName,
+    onStart,
+    onStdout,
+    onStderr,
+    onExit,
+    cmdArguments
+  } = options;
+  let childProcess,
+    firstResponse = true,
+    wasKilledbyUs = false;
 
   const executingCmd: any = new Promise((resolve, reject) => {
     let cmdArguments = options ? options.cmdArguments : [];
-    
-    childProcess =
-      cp.exec(cmd + ' ' + (cmdArguments || []).join(' '), {}, handleExit);
 
+    childProcess = cp.exec(
+      cmd + " " + (cmdArguments || []).join(" "),
+      {},
+      handleExit
+    );
 
-    childProcess.stdout.on('data', (data: Buffer) => {
+    childProcess.stdout.on("data", (data: Buffer) => {
       if (firstResponse && onStart) {
         onStart();
       }
@@ -91,7 +110,7 @@ export function execCmd
       }
     });
 
-    childProcess.stderr.on('data', (data: Buffer) => {
+    childProcess.stderr.on("data", (data: Buffer) => {
       if (firstResponse && onStart) {
         onStart();
       }
@@ -109,7 +128,7 @@ export function execCmd
       if (!wasKilledbyUs) {
         if (err) {
           if (options.showMessageOnError) {
-            const cmdName = cmd.split(' ', 1)[0];
+            const cmdName = cmd.split(" ", 1)[0];
             const cmdWasNotFound =
               // Windows method apparently still works on non-English systems
               (isWindows &&
@@ -117,9 +136,9 @@ export function execCmd
               (!isWindows && (<any>err).code === 127);
 
             if (cmdWasNotFound) {
-              let notFoundText = options ? options.notFoundText : '';
+              let notFoundText = options ? options.notFoundText : "";
               vscode.window.showErrorMessage(
-                `${cmdName} is not available in your path. ` + notFoundText,
+                `${cmdName} is not available in your path. ` + notFoundText
               );
             } else {
               vscode.window.showErrorMessage(err.message);
@@ -142,9 +161,91 @@ export function execCmd
   function killProcess() {
     wasKilledbyUs = true;
     if (isWindows) {
-      cp.spawn('taskkill', ['/pid', childProcess.pid.toString(), '/f', '/t']);
+      cp.spawn("taskkill", ["/pid", childProcess.pid.toString(), "/f", "/t"]);
     } else {
-      childProcess.kill('SIGINT');
+      childProcess.kill("SIGINT");
     }
   }
+}
+
+function matchAttr(attribute: string): string {
+  switch (attribute) {
+    case "type":
+      return "type'";
+    default:
+      return attribute;
+  }
+}
+
+function matchAttrValue(attrValue: string): string {
+  if (attrValue === null) {
+    return `True`;
+  }
+
+  if (isNaN(parseFloat(attrValue)) === false) {
+    return `${attrValue}`;
+  }
+
+  return `"${attrValue}"`;
+}
+
+function parseAttributes(attributes: Array<any>): string {
+  let parsedAttributesArray = attributes.map(attr => {
+    return `${matchAttr(attr.name)} ${matchAttrValue(attr.value)}`;
+  });
+
+  return parsedAttributesArray.length > 0
+    ? ` ${parsedAttributesArray.join(", ")} `
+    : '';
+}
+
+function indent(level: number): string {
+  const config = vscode.workspace.getConfiguration("editor");
+  const tabSymbol = config.insertSpaces ? " ".repeat(config.tabSize) : "\t";
+
+  let indentationString = "";
+  for (let i = 0; i < level; i += 1) {
+    indentationString += tabSymbol;
+  }
+
+  return indentationString;
+}
+
+export function buildComposition(
+  node: any,
+  indentLevel: number = 0
+): string {
+
+  if (node.name === null && node.children.length > 0) {
+    return node.children.map(childNode => buildComposition(childNode, indentLevel)).join('');
+  }
+
+  const attrs = parseAttributes(node.attributes);
+
+  const children = node.children
+    .map(childNode => buildComposition(childNode, indentLevel + 1))
+    .join('\n, ');
+
+  const nodeString =
+      indent(indentLevel) +
+      `${node.name} [${attrs}] [${children}]`;
+
+  return nodeString
+}
+
+function unindentResultString(result: string): string {
+  const parts = result.split('\n');
+  const firstLine = parts[0];
+  const unindentForNumber = firstLine.length - firstLine.trim().length;
+
+  return parts
+    .map(line => line.slice(unindentForNumber))
+    .join('\n');
+}
+
+export function getPureResultFromFormaterOutput(output: string, prefixToSplitBy: string): stirng {
+  let res = output.split(prefixToSplitBy)[1];
+  res = res.replace(/^\s*\n/gm, '');
+  res = unindentResultString(res);
+  return res;
 }
