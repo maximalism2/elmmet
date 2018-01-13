@@ -1,65 +1,23 @@
-# Elmmet README
-
-This is the README for your extension "elmmet". After writing up a brief description, we recommend including the following sections.
+# Elmmet [![Build Status](https://travis-ci.org/necinc/elmmet.svg?branch=master)](https://travis-ci.org/necinc/elmmet)
+### VSCode Emmet to Elm extension
+Expand Emmet abbreviation into the composition of Elm functions
+>Note: this extension is still in **BETA**, if you got some failures, please, create the issue
 
 ## Features
+Instead of write first your markup in HTML, then use some third-party services to generate Elm markap from it you can use any valid Emmet abbreviation right in your editor and get valid composition of elm functions
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+![exansion at work](./previews/in_the_action.gif)
+![exansion at work 2](./previews/full.gif)
 
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+There is a list of test which is still failing, see https://travis-ci.org/necinc/elmmet <br />
+If you got an issue which looks similar to one of failing test, that means that it will be fixed soon
 
 ## Release Notes
-
-Users appreciate release notes as you update your extension.
-
 ### 1.0.0
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on OSX or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on OSX or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (OSX) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+Initial release of extension.
+ - Use [emmetio](https://github.com/emmetio) official [abbreviation](https://github.com/emmetio/abbreviation) parser and [abbreviation extractor](https://github.com/emmetio/extract-abbreviation)
+ - Use [elm-format](https://github.com/avh4/elm-format) to format output in [common Elm notation](https://guide.elm-lang.org/install.html#configure-your-editor)
