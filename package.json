@@ -16,7 +16,6 @@
         "url": "https://github.com/necinc/elmmet"
     },
     "activationEvents": [
-        "onCommand:extension.sayHello",
         "onLanguage:elm"
     ],
     "main": "./out/src/extension",
@@ -25,10 +24,6 @@
             {
                 "command": "extension.expandAbbreviation",
                 "title": "Emmet to Elm"
-            },
-            {
-                "command": "extension.sayHello",
-                "title": "Enable elmmet"
             }
         ]
     },
