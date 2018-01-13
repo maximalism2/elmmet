@@ -2,6 +2,7 @@
     "name": "elmmet",
     "displayName": "Elm Emmet",
     "description": "Convert emmet abbreviations to composition of elm functions",
+    "icon": "images/logo.png",
     "version": "1.0.0",
     "publisher": "necinc",
     "license": "MIT",

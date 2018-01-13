@@ -6,8 +6,8 @@ Expand Emmet abbreviation into the composition of Elm functions
 ## Features
 Instead of write first your markup in HTML, then use some third-party services to generate Elm markap from it you can use any valid Emmet abbreviation right in your editor and get valid composition of elm functions
 
-![exansion at work](./previews/in_the_action.gif)
-![exansion at work 2](./previews/full.gif)
+![exansion at work](./images/in_the_action.gif)
+![exansion at work 2](./images/full.gif)
 
 
 ## Known Issues
