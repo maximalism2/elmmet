@@ -3,5 +3,5 @@ language: node_js
 node_js:
   - lts/*
 
-script:
+before_script:
   - "npm run vscode:prepublish"
