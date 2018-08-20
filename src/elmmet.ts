@@ -69,8 +69,8 @@ class Elmmet {
         getPureResultFromFormaterOutput(value.stdout, prefixString.trim())
       )
       .catch(err => {
-        console.log(err);
-        return null;
+        console.log('Got an error while was formating the code with elm-format', err);
+        return parsingResult;
       })
   }
 
