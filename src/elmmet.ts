@@ -15,7 +15,8 @@ interface AbbreviationSource {
 };
 
 class Elmmet {
-  _formaterPrefixString: string = 'tempFormaterFunc = ';
+  _formaterPrefixString: string = 'tempFormaterFunc = div [] [';
+  _formaterSuffixString: string = ']';
 
   getAbbreviationSource() : AbbreviationSource {
     let editor = vscode.window.activeTextEditor;
@@ -42,7 +43,7 @@ class Elmmet {
     try {
       tree = parseAbbreviation(abbr);
     } catch(e) {
-      console.log(e.message);
+      throw e;
       return;
     }
 
@@ -53,20 +54,19 @@ class Elmmet {
   parseAbbreviationTree(tree: any): Promise<string> {
     if (!tree) { return; }
 
-    let parsingResult = buildComposition(tree);
-    
+    const parsingResult = buildComposition(tree);
+
     return this.formatResult(parsingResult);
   }
 
   formatResult(parsingResult: string): Promise<string> {
-    const prefixString = this._formaterPrefixString;
     const format = execCmd('./node_modules/.bin/elm-format --stdin', {});
-    format.stdin.write(prefixString + parsingResult);
+    format.stdin.write(this._formaterPrefixString + parsingResult + this._formaterSuffixString);
     format.stdin.end();
-  
+
     return format
-      .then((value: { stdout: string, stderr: string }): string => 
-        getPureResultFromFormaterOutput(value.stdout, prefixString.trim())
+      .then((value: { stdout: string, stderr: string }): string =>
+        getPureResultFromFormaterOutput(value.stdout)
       )
       .catch(err => {
         console.log('Got an error while was formating the code with elm-format', err);

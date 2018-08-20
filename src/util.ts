@@ -2,8 +2,6 @@
 
 import * as vscode from "vscode";
 import * as cp from "child_process";
-import * as fs from "fs";
-import * as path from "path";
 import * as extract from "@emmetio/extract-abbreviation";
 import * as abbreviationParser from "@emmetio/abbreviation";
 
@@ -32,7 +30,7 @@ export function parseAbbreviation(abbr: string): any {
   try {
     result = abbreviationParser(abbr);
   } catch (e) {
-    console.log("tree parsing error: ", e.message);
+    throw new Error(`Tree parsing error: ${e.message}`);
   }
 
   return result;
@@ -168,19 +166,33 @@ export function execCmd(
   }
 }
 
-function unindentResultString(result: string): string {
-  const parts = result.split('\n');
-  const firstLine = parts[0];
-  const unindentForNumber = firstLine.length - firstLine.trim().length;
+function getGroupMatch(str: string, matcher: RegExp, groupIndex: number): string {
+  const matches = matcher.exec(str);
+  if (!matches || !matches[groupIndex]) { throw new Error('Matches not found'); }
+  return matches[groupIndex];
+}
 
+function getIndentationLevel(output: string): number {
+  const matcher = /^tempFormaterFunc \=\n?\s*div \[\]\n?([\s\S]*)\s*\]/m;
+  const res = getGroupMatch(output, matcher, 1);
+  const firstLine = res.split('\n')[0];
+  return firstLine.length - firstLine.trim().length;
+}
+
+function unindentResultString(result: string, unindentForNumber: number): string {
+  const parts = result.split('\n');
   return parts
-    .map(line => line.slice(unindentForNumber))
+    .map(line => new RegExp(`^\\s{${unindentForNumber}}`).test(line)
+      ? line.slice(unindentForNumber)
+      : line
+    )
     .join('\n');
 }
 
-export function getPureResultFromFormaterOutput(output: string, prefixToSplitBy: string): string {
-  let res = output.split(prefixToSplitBy)[1];
-  res = res.replace(/^\s*\n/gm, '');
-  res = unindentResultString(res);
-  return res;
+export function getPureResultFromFormaterOutput(output: string): string {
+  const matcher = /^tempFormaterFunc \=\n?\s*div \[\]\n?\s*\[\s*([\s\S]*)\s*\]/m;
+  return unindentResultString(
+    getGroupMatch(output, matcher, 1).trim(),
+    getIndentationLevel(output)
+  );
 }

@@ -9,12 +9,18 @@ function matchAttr(attribute: string): string {
   }
 }
 
-function matchAttrValue(attrValue: string): string {
-  if (attrValue === null) {
+function matchAttrValue(attrName: string, attrValue?: string): string {
+  if (attrName === 'src') {
+    return !attrValue
+      ? `""`
+      : `"${matchAttr}"`;
+  }
+
+  if (!attrValue || attrName === 'contenteditable') {
     return `True`;
   }
 
-  if (isNaN(parseFloat(attrValue)) === false) {
+  if (isNaN(Number(attrValue)) === false) {
     return `${attrValue}`;
   }
 
@@ -23,7 +29,7 @@ function matchAttrValue(attrValue: string): string {
 
 function parseAttributes(attributes: Array<any>): string {
   let parsedAttributesArray = attributes.map(attr => {
-    return `${matchAttr(attr.name)} ${matchAttrValue(attr.value)}`;
+    return `${matchAttr(attr.name)} ${matchAttrValue(attr.name, attr.value)}`;
   });
 
   return parsedAttributesArray.length > 0
@@ -57,7 +63,7 @@ export function buildComposition(
   indentLevel: number = 0
 ): string {
   if (node.name === null && node.children.length > 0) {
-    return node.children.map(childNode => buildComposition(childNode, indentLevel)).join('');
+    return node.children.map(childNode => buildComposition(childNode, indentLevel)).join(', ');
   }
 
   const attrs = parseAttributes(node.attributes);
@@ -68,9 +74,7 @@ export function buildComposition(
 
   const content = addTextContent(node, children);
 
-  const nodeString =
-      indent(indentLevel) +
-      `${node.name} [${attrs}] [${content}]`;
+  const nodeString = `${indent(indentLevel)}${node.name} [${attrs}] [${content}]`;
 
   return nodeString
 }
