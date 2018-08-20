@@ -1,7 +1,6 @@
-# Change Log
- - Initial release
+# Elmmet v1.0.1
+ - Fixed [#2](https://github.com/necinc/elmmet/issues/2) issue with broken extensions functionality
+ - Extend functionality by fixing part of failing tests
 
 ## [Unreleased]
-- Matching attributes with their values
-- Variables resolving
-- Multiple nested content resolving
+ - Did not get rid of elm-format yet, [#1](https://github.com/necinc/elmmet/issues/1) issue is not fixed
