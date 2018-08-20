@@ -71,7 +71,7 @@ export function buildComposition(
 
   const children = node.children
     .map(childNode => buildComposition(childNode))
-    .join(', ');
+    .join('\n, ');
 
   const content = addTextContent(node, children);
 
