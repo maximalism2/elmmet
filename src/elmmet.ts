@@ -44,7 +44,6 @@ class Elmmet {
       tree = parseAbbreviation(abbr);
     } catch(e) {
       throw e;
-      return;
     }
 
     this.parseAbbreviationTree(tree)
