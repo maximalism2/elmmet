@@ -55,26 +55,27 @@ function addTextContent(node: any, parsedChildrenString: string): string {
     return parsedChildrenString.length > 0 ? textContent + '\n,' + parsedChildrenString : textContent;
   }
 
-  return parsedChildrenString;
+  return parsedChildrenString
+    ? ` ${parsedChildrenString} `
+    : '';
 }
 
 export function buildComposition(
   node: any,
-  indentLevel: number = 0
 ): string {
   if (node.name === null && node.children.length > 0) {
-    return node.children.map(childNode => buildComposition(childNode, indentLevel)).join(', ');
+    return node.children.map(childNode => buildComposition(childNode)).join(', ');
   }
 
   const attrs = parseAttributes(node.attributes);
 
   const children = node.children
-    .map(childNode => buildComposition(childNode, indentLevel + 1))
-    .join('\n, ');
+    .map(childNode => buildComposition(childNode))
+    .join(', ');
 
   const content = addTextContent(node, children);
 
-  const nodeString = `${indent(indentLevel)}${node.name} [${attrs}] [${content}]`;
+  const nodeString = `${node.name} [${attrs}] [${content}]`;
 
   return nodeString
 }
